@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.freeswitch.esl.client</groupId>
   <artifactId>esl-client</artifactId>
-  <version>0.10.5-SNAPSHOT</version>
+  <version>0.10.5</version>
   <name>esl-client</name>
   <description>description</description>
   <build>
@@ -52,4 +52,11 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>thirdparty</id>
+      <name>thirdparty</name>
+      <url>http://10.0.2.180:8081/nexus/content/repositories/thirdparty/</url>
+    </repository>
+  </distributionManagement>
 </project>
