@@ -89,6 +89,11 @@ public class EslHeaders {
 		 */
 		public static final String OK = "+OK";
 		/**
+		 * {@code "text/rude-rejection"}
+		 */
+		public static final String RUDE_REJECTION = "text/rude-rejection";
+
+		/**
 		 * {@code "auth/request"}
 		 */
 		public static final String AUTH_REQUEST = "auth/request";

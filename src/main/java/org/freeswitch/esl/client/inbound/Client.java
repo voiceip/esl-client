@@ -58,6 +58,7 @@ public class Client implements IModEslApi {
 	private final ConcurrentHashMap<String, CompletableFuture<EslEvent>> backgroundJobs = new ConcurrentHashMap<>();
 
 	private boolean authenticated;
+	private boolean disconnected=false;
 	private CommandResponse authenticationResponse;
 	private Optional<Context> clientContext = Optional.empty();
 	private ExecutorService callbackExecutor = Executors.newSingleThreadExecutor();
@@ -146,14 +147,15 @@ public class Client implements IModEslApi {
 				// ignore
 			}
 		}
-
-		this.clientContext = Optional.of(new Context(channel, handler));
-
-		if (!authenticated) {
-			throw new InboundConnectionFailure("Authentication failed: " + authenticationResponse.getReplyText());
+		if(disconnected){
+			throw new InboundConnectionFailure("disconnected" );
+		}else {
+			if (!authenticated) {
+				throw new InboundConnectionFailure("Authentication failed: " + authenticationResponse.getReplyText());
+			}
+			this.clientContext = Optional.of(new Context(channel, handler));
+			log.info("Authenticated");
 		}
-
-		log.info("Authenticated");
 	}
 
 	/**
@@ -379,6 +381,8 @@ public class Client implements IModEslApi {
 		@Override
 		public void disconnected() {
 			log.info("Disconnected ...");
+			authenticatorResponded.set(true);
+			disconnected = true;
 			if (null != connectionListener)
 				try {
 					connectionListener.ondisconnected();
