@@ -121,12 +121,16 @@ public abstract class AbstractEslClientHandler extends SimpleChannelInboundHandl
 				break;
 
 			case Value.AUTH_REQUEST:
-				log.debug("Auth request received [{}]", message);
+				log.info("Auth request received [{}]", message);
 				handleAuthRequest(ctx);
 				break;
 
+			case Value.RUDE_REJECTION:
+				log.info("rude-rejection received [{}]", message);
+//				handleDisconnectionNotice();
+				break;
 			case Value.TEXT_DISCONNECT_NOTICE:
-				log.debug("Disconnect notice received [{}]", message);
+				log.info("Disconnect notice received [{}]", message);
 				handleDisconnectionNotice();
 				break;
 
