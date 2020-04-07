@@ -44,6 +44,7 @@ class InboundClientHandler extends AbstractEslClientHandler {
 	private final IEslProtocolListener listener;
 
 	public InboundClientHandler(String password, IEslProtocolListener listener) {
+		super();
 		this.password = password;
 		this.listener = listener;
 	}
