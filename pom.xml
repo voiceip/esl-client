@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.freeswitch.esl.client</groupId>
   <artifactId>esl-client</artifactId>
-  <version>0.10.5</version>
+  <version>0.10.6</version>
   <name>esl-client</name>
   <description>description</description>
   <build>
@@ -24,7 +24,7 @@
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-all</artifactId>
-      <version>4.1.17.Final</version>
+      <version>4.1.48.Final</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
