@@ -17,7 +17,10 @@ package org.freeswitch.esl.client.inbound;
 
 import com.google.common.base.Throwables;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.freeswitch.esl.client.internal.Context;
@@ -55,6 +58,7 @@ public class Client implements IModEslApi {
 	private final ConcurrentHashMap<String, CompletableFuture<EslEvent>> backgroundJobs = new ConcurrentHashMap<>();
 
 	private boolean authenticated;
+	private boolean disconnected=false;
 	private CommandResponse authenticationResponse;
 	private Optional<Context> clientContext = Optional.empty();
 	private ExecutorService callbackExecutor = Executors.newSingleThreadExecutor();
@@ -124,13 +128,6 @@ public class Client implements IModEslApi {
 		}
 		// Did not timeout
 		final Channel channel = future.channel();
-
-		channel.closeFuture().addListener((ChannelFutureListener) channelFuture -> {
-			log.warn("Connection closed connect to [{}]", clientAddress);
-			clientContext = Optional.empty();
-		});
-
-
 		// But may have failed anyway
 		if (!future.isSuccess()) {
 			log.warn("Failed to connect to [{}]", clientAddress, future.cause());
@@ -150,14 +147,15 @@ public class Client implements IModEslApi {
 				// ignore
 			}
 		}
-
-		this.clientContext = Optional.of(new Context(channel, handler));
-
-		if (!authenticated) {
-			throw new InboundConnectionFailure("Authentication failed: " + authenticationResponse.getReplyText());
+		if(disconnected){
+			throw new InboundConnectionFailure("disconnected" );
+		}else {
+			if (!authenticated) {
+				throw new InboundConnectionFailure("Authentication failed: " + authenticationResponse.getReplyText());
+			}
+			this.clientContext = Optional.of(new Context(channel, handler));
+			log.info("Authenticated");
 		}
-
-		log.info("Authenticated");
 	}
 
 	/**
@@ -383,7 +381,8 @@ public class Client implements IModEslApi {
 		@Override
 		public void disconnected() {
 			log.info("Disconnected ...");
-			clientContext = Optional.empty();
+			authenticatorResponded.set(true);
+			disconnected = true;
 			if (null != connectionListener)
 				try {
 					connectionListener.ondisconnected();
