@@ -18,7 +18,8 @@ package org.freeswitch.esl.client.internal;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.freeswitch.esl.client.transport.event.EslEvent;
 import org.freeswitch.esl.client.transport.event.EslEventHeaderNames;
 import org.freeswitch.esl.client.transport.message.EslHeaders.Name;
@@ -267,7 +268,7 @@ public abstract class AbstractEslClientHandler extends SimpleChannelInboundHandl
 		return sendBackgroundApiJobCommand(channel, command).thenComposeAsync(jobId -> {
 			final CompletableFuture<EslEvent> resultFuture = new CompletableFuture<>();
 			backgroundJobs.put(jobId, resultFuture);
-			return CompletableFuture.completedFuture((new Pair<>(jobId,resultFuture)));
+			return CompletableFuture.completedFuture((new ImmutablePair<>(jobId,resultFuture)));
 		});
 	}
 
