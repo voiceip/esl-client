@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     compile 'io.netty:netty-all:4.1.53.Final'
-    compile 'com.google.guava:guava:23.4-jre'
+    compile 'com.google.guava:guava:30.0-jre'
     compile 'org.slf4j:slf4j-api:1.7.30'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
